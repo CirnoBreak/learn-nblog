@@ -4,7 +4,10 @@
             <a href="/posts?author=<%= post.author._id %>"
                class="avatar"
                data-title="<%= post.author.name %> | <%= ({m:'男', f:'女', x:'保密'})[post.author.gender] %>"
-               data-content="<%= post.author.bio %>"></a>
+               data-content="<%= post.author.bio %>">
+                    <img src="/img/<%= post.author.avatar %>" class="avatar">
+               </a>
+               
         </div>
 
         <div class="eight wide column">
@@ -15,7 +18,7 @@
                     <span class="tag"><%= post.created_at %></span>
                     <span class="tag right">
                         <span>浏览(<%= post.pv %>)</span>
-                        <span>留言(<%= post.commentsCount%>)</span>
+                        <span>留言(<%= post.commentsCount %>)</span>
 
                         <% if(user && post.author._id && user._id.toString() === post.author._id.toString()) { %>
                             <div class="ui inline dropdown">

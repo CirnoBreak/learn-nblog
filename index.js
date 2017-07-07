@@ -4,24 +4,23 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
 var config = require('config-lite')(__dirname);
-var routes = require('./routes/index');
+var routes = require('./routes');
 var pkg = require('./package');
 var winston = require('winston');
 var expressWinston = require('express-winston');
-
 var app = express();
 
 //设置存放模板文件的目录
 app.set('views', path.join(__dirname, 'views'));
 //设置模板引擎为 ejs
 app.set('view engine', 'ejs');
-
 //设置静态文件目录
 app.use(express.static(path.join(__dirname, 'public')));
 //session 中间件
 app.use(session({
     name: config.session.key, //设置cookie中保存的session id的字段名称
     secret: config.session.secret, //通过设置secret来计算hash值并存放在cookie中，使产生的signed的cookie防篡改
+    saveUninitialized:false,
     cookie: {
         maxAge: config.session.maxAge //过期时间，过期后cookie中的session id自动删除
     },

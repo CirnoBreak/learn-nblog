@@ -21,7 +21,7 @@ Post.plugin('contentToHtml', {
 //给post添加留言数commentsCount
 Post.plugin('addCommentsCount', {
     afterFind: function (posts) {
-        return Promise.all(posts.map(function (posts) {
+        return Promise.all(posts.map(function (post) {
             return CommentModel.getCommentsCount(post._id).then(function (commentsCount) {
                 post.commentsCount = commentsCount;
                 return post;
@@ -68,6 +68,7 @@ module.exports = {
             .populate({path: 'author', model: 'User'})
             .sort({_id: -1})
             .addCreatedAt()
+            .addCommentsCount()
             .contentToHtml()
             .exec();
     },
@@ -93,13 +94,13 @@ module.exports = {
     },
 
     //通过用户id和文章id删除一篇文章
-    delPostById:function delPostById(postId, author, data) {
+    delPostById:function delPostById(postId, author) {
         return Post.remove({author: author,_id: postId})
             .exec()
             .then(function (res) {
                 //文章删除后，再删除该文章下的所有留言
                 if(res.result.ok && res.result.n > 0) {
-                    return CommentModel.delCommentByPostId(postId);
+                    return CommentModel.delCommentsByPostId(postId);
                 }
             });
     },
